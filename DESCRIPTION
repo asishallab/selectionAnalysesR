@@ -1,9 +1,10 @@
 Package: pamlR
 Type: Package
-Title: What the package does (short line)
-Version: 1.0
+Title: Runs max likelihood inference of Ka/Ks ratios allowing for branch specific rates and subsequently identifies positions under selection using the Bayes Empiricial Bayes (BEB) method. Input is a single FASTA file of coding sequences, output an annotated max likelihood phylogenetic tree and a txt file of positions under selection.
+Version: 0.1
 Date: 2014-09-24
-Author: Who wrote it
-Maintainer: Who to complain to <yourfault@somewhere.net>
-Description: More about what it does (maybe more than one line)
-License: What license is it under?
+Author: Asis Hallab
+Maintainer: Asis Hallab <hallab@mpipz.mpg.de>
+Description: Implements a bridge between R and PAML
+License: GPL-3
+Depends: R (>= 3.0), parallel (>= 3.0), Biostrings (>= 2.26.2), ape (>= 3.0.7), phangorn (>= 1.7.1), stringr (>= 0.6.2), brew (>= 1.0.6)
