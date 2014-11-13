@@ -28,8 +28,14 @@ hyphy.fubar.bf <- 'inputRedirect = {};
 inputRedirect["01"]="Universal";
 inputRedirect["02"]="1";
 inputRedirect["03"]="<%= fam.cds.msa.path %>";
-inputRedirect["06"]="<%= fam.tree.4.paml.path %>";
-inputRedirect["12"]="<%= fam.hyphy.fubar.output.path %>";
+inputRedirect["04"]="<%= fam.tree.4.paml.path %>";
+inputRedirect["05"]="20";
+inputRedirect["06"]="5";
+inputRedirect["07"]="2000000";
+inputRedirect["08"]="1000000";
+inputRedirect["09"]="100";
+inputRedirect["10"]="0.5";
+inputRedirect["11"]="<%= fam.hyphy.fubar.output.path %>";
 
 ExecuteAFile ("/biodata/dep_tsiantis/common/software/lib/hyphy/TemplateBatchFiles/FUBAR.bf", inputRedirect);'
 
