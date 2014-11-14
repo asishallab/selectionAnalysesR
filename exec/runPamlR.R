@@ -15,6 +15,7 @@ no.threads <- if (length(c.args) == 2) {
 # Prepare output folder:
 file.name <- sub("\\.\\S+$", "", str_match(cds.fst, "[^/]+$")[[1, 1]], perl = TRUE)
 output.dir <- paste(dirname(normalizePath(cds.fst)), "/", file.name, "/", sep = "") 
+dir.create( output.dir, showWarnings=FALSE )
 fam.san.fasta.path <- paste(output.dir, file.name, "_sanitized.fasta", sep = "")
 fam.aa.fasta.path <- sub("\\.fasta$", "_macse_AA.fasta", fam.san.fasta.path, perl = TRUE) 
 fam.aa.san.fasta.path <- sub("\\.fasta$", "_macse_AA_sanitized.fasta", fam.san.fasta.path, perl = TRUE) 
