@@ -60,8 +60,8 @@ fam.aas.san.msa <- readAAMultipleAlignment(fam.aa.msa.path)
 fam.cds.msa <- alignCDSSetWithAlignedAAsAsGuide(fam, attr(fam.aas.san.msa, "unmasked"))
 writeXStringSet(attr(fam.cds.msa, "unmasked"), fam.cds.msa.path)
 # Generate Phylogenetic maximum likelihood Tree:
-system(paste("OMP_NUM_THREADS=", no.threads, "FastTreeMP -nt -gtr -gamma <", fam.cds.msa.path, 
-  ">", fam.tree.path)) 
+system(paste("OMP_NUM_THREADS=", no.threads, " FastTreeMP -nt -gtr -gamma < ", 
+  fam.cds.msa.path, " > ", fam.tree.path, sep = "")) 
 fam.tree <- read.tree(fam.tree.path)
 fam.tree.4.paml <- removeNodeLabelsAndBranchLengths(fam.tree)
 write.tree(fam.tree.4.paml, fam.tree.4.paml.path)
