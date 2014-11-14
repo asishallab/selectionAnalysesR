@@ -1,13 +1,20 @@
 require(pamlR)
 
 # Hail User:
-message("Usage: Rscript runPamlR.R codingSequences.fasta")
+message("Usage: Rscript runPamlR.R codingSequences.fasta [number_of_threads]")
+
+# Read command line arguments:
+c.args <- commandArgs(trailingOnly = TRUE)
+cds.fst <- c.args[[1]]
+no.threads <- if (length(c.args) == 2) {
+  as.integer(c.args[[2]])
+} else {
+  1
+} 
 
 # Prepare output folder:
-file.name <- sub("\\.\\S+$", "", str_match(commandArgs(trailingOnly = TRUE)[[1]], 
-  "[^/]+$")[[1, 1]], perl = TRUE)
-output.dir <- paste(dirname(normalizePath(commandArgs(trailingOnly = TRUE)[[1]])), 
-  "/", file.name, "/", sep = "") 
+file.name <- sub("\\.\\S+$", "", str_match(cds.fst, "[^/]+$")[[1, 1]], perl = TRUE)
+output.dir <- paste(dirname(normalizePath(cds.fst)), "/", file.name, "/", sep = "") 
 fam.san.fasta.path <- paste(output.dir, file.name, "_sanitized.fasta", sep = "")
 fam.aa.fasta.path <- sub("\\.fasta$", "_macse_AA.fasta", fam.san.fasta.path, perl = TRUE) 
 fam.aa.san.fasta.path <- sub("\\.fasta$", "_macse_AA_sanitized.fasta", fam.san.fasta.path, perl = TRUE) 
@@ -24,8 +31,7 @@ fam.hyphy.fubar.output.path <- paste( output.dir, file.name, "_hyphy_fubar_outpu
 fam.tree.4.paml.path <- paste( output.dir, file.name, "_ml_tree_pure_topology.newick", sep="" )
 system(paste("mkdir -p", file.name))
 # Read Input and remove stop codons:
-fam <- DNAStringSet(lapply(readDNAStringSet(commandArgs(trailingOnly = TRUE)[[1]]), 
-  removeStopCodon))
+fam <- DNAStringSet(lapply(readDNAStringSet(cds.fst), removeStopCodon)) 
 # Sanitize sequence names:
 fam.name.maps <- data.frame(original = names(fam), sanitized = paste("PROT", 1:length(fam), 
   sep = ""), stringsAsFactors = FALSE)
@@ -46,13 +52,15 @@ if (length(fam.aas.san) < length(fam.aas)) {
 # Write out the sanitized amino acid seqs:
 writeXStringSet(fam.aas.san, fam.aa.san.fasta.path)
 # Generate a multiple sequence alignment:
-system(paste("mafft --auto", fam.aa.san.fasta.path, ">", fam.aa.msa.path))
+system(paste("mafft --thread", no.threads, "--auto", fam.aa.san.fasta.path, ">", 
+  fam.aa.msa.path)) 
 fam.aas.san.msa <- readAAMultipleAlignment(fam.aa.msa.path)
 # Use the aligned AA-Seqs as quide to align the CDS Sequences:
 fam.cds.msa <- alignCDSSetWithAlignedAAsAsGuide(fam, attr(fam.aas.san.msa, "unmasked"))
 writeXStringSet(attr(fam.cds.msa, "unmasked"), fam.cds.msa.path)
 # Generate Phylogenetic maximum likelihood Tree:
-system(paste("FastTreeMP -nt -gtr -gamma <", fam.cds.msa.path, ">", fam.tree.path)) 
+system(paste("OMP_NUM_THREADS=", no.threads, "FastTreeMP -nt -gtr -gamma <", fam.cds.msa.path, 
+  ">", fam.tree.path)) 
 fam.tree <- read.tree(fam.tree.path)
 fam.tree.4.paml <- removeNodeLabelsAndBranchLengths(fam.tree)
 write.tree(fam.tree.4.paml, fam.tree.4.paml.path)
