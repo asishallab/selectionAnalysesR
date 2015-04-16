@@ -1,0 +1,18 @@
+
+Variable 'skipCodeSelectionStep' was not initialized prior to being used
+Loaded 'GrabBag' from /biodata/dep_tsiantis/common/software/lib/hyphy/TemplateBatchFiles/Utility/GrabBag.bf
+Loaded 'ReadDelimitedFiles' from /biodata/dep_tsiantis/common/software/lib/hyphy/TemplateBatchFiles/Utility/ReadDelimitedFiles.bf
+Variable 'END_OF_FILE' was not initialized prior to being used
+Variable 'PROMPT_FOR_FILE' was not initialized prior to being used
+Variable 'NEXUS_FILE_TREE_MATRIX' was not initialized prior to being used
+Variable '_doAAcids' was not initialized prior to being used
+Row and/or column partition is empty. All the data will be used by default.
+Row and/or column partition is empty. All the data will be used by default.
+Variable '_WRAP_PASSTHROUGH_FLAG_' was not initialized prior to being used
+Variable '_DO_TREE_REBALANCE_' was not initialized prior to being used
+Variable '_KEEP_I_LABELS_' was not initialized prior to being used
+No nodel was assigned to PROT1
+No nodel was assigned to PROT4
+No nodel was assigned to PROT3
+No nodel was assigned to PROT5
+No nodel was assigned to Node3

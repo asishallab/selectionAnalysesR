@@ -69,3 +69,8 @@ write.tree(fam.tree.4.paml, fam.tree.4.paml.path)
 brew( text=hyphy.branch.site.bf, output=fam.hyphy.branch.site.batch.file.path )
 brew( text=hyphy.meme.bf, output=fam.hyphy.meme.batch.file.path )
 brew( text=hyphy.fubar.bf, output=fam.hyphy.fubar.batch.file.path )
+# Run HYPHY on each of the above Batch Files:
+system( paste( "HYPHYMP cpu=", no.threads, " ", fam.hyphy.meme.batch.file.path, sep="" ) )
+# Exclude for now, because of too high resource requirements
+# system( paste( "HYPHYMP cpu=", no.threads, " ", fam.hyphy.branch.site.batch.file.path, sep="" ) )
+# system( paste( "HYPHYMP cpu=", no.threads, " ", fam.hyphy.fubar.batch.file.path, sep="" ) )

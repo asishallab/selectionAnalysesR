@@ -1,0 +1,6 @@
+"original" "sanitized"
+"AT1G72800.1" "PROT1"
+"scaffold_202205.1" "PROT2"
+"PAC:20906034" "PROT3"
+"CARHR065710.1" "PROT4"
+"CARHR065730.1" "PROT5"
