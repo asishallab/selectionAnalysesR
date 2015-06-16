@@ -24,3 +24,16 @@ test.iprWithSelectedAA <- function() {
   iprs <- iprWithSelectedAA(sel.aa, gene, aa.fasta, msa.fasta, iprscan.tbl)
   checkEquals(iprs, c("IPR001223", "IPR013781", "IPR017853"))
 } 
+
+test.replaceSanitizedWithOriginalIDs <- function() {
+  name.maps <- read.table(project.file.path("group5792", "group5792_name_mappings.txt"), 
+    stringsAsFactors = FALSE, header = TRUE)
+  aa.fasta <- readAAStringSet(project.file.path("group5792", "group5792_sanitized_macse_AA.fasta"))
+  aa.orig <- replaceSanitizedWithOriginalIDs(aa.fasta, name.maps)
+  checkTrue(all(as.logical(lapply(1:length(names(aa.fasta)), function(i) {
+    x.san <- names(aa.fasta)[[i]]
+    x.expct <- name.maps[which(name.maps$sanitized == x.san), "original"]
+    x.orig <- names(aa.orig)[[i]]
+    x.expct == x.orig
+  }))))
+} 

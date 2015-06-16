@@ -173,3 +173,26 @@ domainsForPos <- function(gene, aa.pos, iprscan.tbl, gene.col = "V1", start.col 
   sort(unique(x[which(x[, start.col] <= aa.pos & x[, end.col] >= aa.pos), ipr.col]), 
     na.last = NA)
 } 
+
+replaceSanitizedWithOriginalIDs <- function(xstring.set, name.maps, san.col = "sanitized", 
+  orig.col = "original") {
+  # Replaces sanitized protein identifiers in XStringSet 'xstring.set' with the
+  # original ones held in 'name.maps' table.
+  #
+  # Args:
+  #  xstring.set : An instance of class XStringSet [package: Biostrings]
+  #  name.maps   : A data.frame with at least two columns one holding the
+  #                sanitized and the other the original protein IDs
+  #  san.col     : The column index or name of 'name.maps' holding the
+  #                sanitized protein IDs
+  #  orig.col    : The column index or name of 'name.maps' holding the original
+  #                protein IDs
+  #
+  # Returns: A copy of argument 'xstring.set' with the sanitized protein IDs
+  # replaced with their originals.
+  #   
+  names(xstring.set) <- as.character(lapply(names(xstring.set), function(x) {
+    name.maps[which(name.maps[, san.col] == x), orig.col]
+  }))
+  xstring.set
+} 
