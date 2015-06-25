@@ -39,6 +39,15 @@ inputRedirect["11"]="<%= fam.hyphy.fubar.output.path %>";
 
 ExecuteAFile ("/biodata/dep_tsiantis/common/software/lib/hyphy/TemplateBatchFiles/FUBAR.bf", inputRedirect);'
 
+hyphy.busted.bf <- 'inputRedirect = {};
+inputRedirect["01"]="Universal";
+inputRedirect["02"]="<%= fam.cds.msa.nexus.path %>";
+inputRedirect["03"]="<%= fam.hyphy.busted.tree.path %>";
+inputRedirect["04"]="Set TEST";
+inputRedirect["05"]="";
+
+ExecuteAFile ("/biodata/dep_tsiantis/common/software/lib/hyphy/TemplateBatchFiles/BUSTED.bf", inputRedirect);'
+
 removeStopCodon <- function( dna.str, st.cdns='(TAG|tag|TAA|taa|TGA|tga)$' ) {
   DNAString( gsub( st.cdns, '', toString( dna.str ), perl=TRUE ) )
 }
@@ -140,4 +149,29 @@ removeNodeLabelsAndBranchLengths <- function( phyl.tree ) {
   phyl.tree$node.label <- NULL
   phyl.tree$edge.length <- NULL
   phyl.tree
+}
+
+writeSimpleNexusMSA <- function( msa, file.path ) {
+  nseqs <- length( msa )
+  nchar <- nchar(msa[[1]])
+  fl.out <- file( file.path, "w" )
+  writeLines( paste( nseqs, nchar ), fl.out )
+  for ( x in names(msa) ) {
+    writeLines( paste( x, toString( msa[[x]] ), sep="\t" ), fl.out )
+  }
+  close(fl.out)
+  TRUE
+}
+
+tree4Busted <- function( tree, foreground.tips ) {
+  tree$node.label <- NULL
+  if ( ! is.null(foreground.tips) && length( foreground.tips ) > 0) {
+  tree$tip.label <- as.character( lapply( tree$tip.label, function(x) {
+      if (x %in% foreground.tips)
+        paste( x, "{TEST}", sep="" )
+      else
+        x
+    }))
+  }
+  tree
 }

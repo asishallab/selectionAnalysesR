@@ -1,4 +1,4 @@
-require(pamlR)
+require(selectionAnalysesR)
 
 # Hail User:
 message("Usage: Rscript runPamlR.R codingSequences.fasta [number_of_threads]")
@@ -29,6 +29,9 @@ fam.hyphy.meme.batch.file.path <- paste( output.dir, file.name, "_hyphy_meme_ana
 fam.hyphy.meme.output.path <- paste( output.dir, file.name, "_hyphy_meme_output.txt", sep="" )
 fam.hyphy.fubar.batch.file.path <- paste( output.dir, file.name, "_hyphy_fubar_analysis.bf", sep="" )
 fam.hyphy.fubar.output.path <- paste( output.dir, file.name, "_hyphy_fubar_output.txt", sep="" )
+fam.cds.msa.nexus.path <- paste( output.dir, file.name, "_CDS_msa.nex", sep="" )
+fam.hyphy.busted.tree.path <- paste( output.dir, file.name, "_ml_tree_no_sup_vals.newick", sep="" )
+fam.hyphy.busted.batch.file.path <- paste( output.dir, file.name, "_hyphy_busted_analysis.bf", sep="" )
 fam.tree.4.paml.path <- paste( output.dir, file.name, "_ml_tree_pure_topology.newick", sep="" )
 system(paste("mkdir -p", file.name))
 # Read Input and remove stop codons:
@@ -59,6 +62,7 @@ fam.aas.san.msa <- readAAMultipleAlignment(fam.aa.msa.path)
 # Use the aligned AA-Seqs as quide to align the CDS Sequences:
 fam.cds.msa <- alignCDSSetWithAlignedAAsAsGuide(fam, attr(fam.aas.san.msa, "unmasked"))
 writeXStringSet(attr(fam.cds.msa, "unmasked"), fam.cds.msa.path)
+writeSimpleNexusMSA(attr(fam.cds.msa, "unmasked"), fam.cds.msa.nexus.path)
 # Generate Phylogenetic maximum likelihood Tree:
 system(paste("OMP_NUM_THREADS=", no.threads, " FastTreeMP -nt -gtr -gamma < ", 
   fam.cds.msa.path, " > ", fam.tree.path, sep = "")) 
@@ -69,8 +73,8 @@ write.tree(fam.tree.4.paml, fam.tree.4.paml.path)
 brew( text=hyphy.branch.site.bf, output=fam.hyphy.branch.site.batch.file.path )
 brew( text=hyphy.meme.bf, output=fam.hyphy.meme.batch.file.path )
 brew( text=hyphy.fubar.bf, output=fam.hyphy.fubar.batch.file.path )
+brew( text=hyphy.busted.bf, output=fam.hyphy.busted.batch.file.path )
 # Run HYPHY on each of the above Batch Files:
-system( paste( "HYPHYMP cpu=", no.threads, " ", fam.hyphy.meme.batch.file.path, sep="" ) )
-# Exclude for now, because of too high resource requirements
+# system( paste( "HYPHYMP cpu=", no.threads, " ", fam.hyphy.meme.batch.file.path, sep="" ) )
 # system( paste( "HYPHYMP cpu=", no.threads, " ", fam.hyphy.branch.site.batch.file.path, sep="" ) )
-# system( paste( "HYPHYMP cpu=", no.threads, " ", fam.hyphy.fubar.batch.file.path, sep="" ) )
+system( paste( "HYPHYMP cpu=", no.threads, " ", fam.hyphy.fubar.batch.file.path, sep="" ) )
